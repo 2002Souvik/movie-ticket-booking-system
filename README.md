@@ -1,21 +1,21 @@
 # 🎬 Movie Ticket Booking System
 
-A simple and structured **Java-based Movie Ticket Booking System** that simulates
+A clean and structured **Java-based Movie Ticket Booking System** that simulates  
 real-world ticket booking workflows using **file-based (CSV) persistence**.
 
-The project focuses on **clarity, clean structure, and realistic data flow**
-rather than UI or external databases.
+The project emphasizes **clear architecture, realistic data flow, and maintainability**,  
+without relying on external databases or complex UI frameworks.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-- View available movies and shows
-- Seat selection with status tracking (AVAILABLE / LOCKED / BOOKED)
-- Ticket booking with payment simulation
-- Booking history tracking
-- File-based persistence using CSV files
-- Clean console-based interaction
+- 🎥 View available movies and show schedules  
+- 💺 Seat selection with status tracking (AVAILABLE / LOCKED / BOOKED)  
+- 🎟️ Ticket booking with payment simulation  
+- 📜 Booking history tracking  
+- 📁 File-based persistence using CSV files  
+- 🖥️ Clean and simple console-based interaction  
 
 ---
 
@@ -40,42 +40,44 @@ MovieTicketBookingSystem
 │
 └─ README.md
 
+
 ---
 
 ## 📊 Sample Data (CSV-Based)
 
-This project uses **structured CSV files** to simulate a real backend system:
+The system uses **structured CSV files** to simulate a realistic backend environment:
 
-- `movies.csv`   → movie catalog  
-- `shows.csv`    → show schedules  
-- `seats.csv`    → seat availability & pricing  
-- `users.csv`    → registered users  
-- `bookings.csv` → confirmed & pending bookings  
-- `logs.csv`     → system activity logs  
+- 🎬 `movies.csv`   → movie catalog  
+- 🕒 `shows.csv`    → show schedules  
+- 💺 `seats.csv`    → seat availability & pricing  
+- 👤 `users.csv`    → registered users  
+- 🎟️ `bookings.csv` → confirmed & pending bookings  
+- 📜 `logs.csv`     → system activity logs  
 
-These files make the system **easy to inspect, debug, and extend**.
+This approach keeps the data **transparent, easy to inspect, and simple to extend**.
 
 ---
 
 ## ▶️ How to Run
 
 1. Clone the repository  
-2. Open in any Java IDE (VS Code / IntelliJ / Eclipse)  
+2. Open the project in any Java IDE  
+   *(VS Code / IntelliJ / Eclipse)*  
 3. Run `Main.java`  
-4. Follow the console menu  
+4. Follow the on-screen console menu  
 
 ---
 
-## 🔮 Future Improvements
+## 🔮 Future Enhancements
 
-- Database integration (MySQL / PostgreSQL)
-- REST API using Spring Boot
-- Web or mobile frontend
-- Advanced seat locking with timeout
+- 🗄️ Database integration (MySQL / PostgreSQL)  
+- 🌐 REST API using Spring Boot  
+- 📱 Web or mobile frontend  
+- ⏱️ Advanced seat locking with timeout  
 
 ---
 
 ## 👤 Author
 
 **Souvik Dhar**  
-GitHub: https://github.com/2002Souvik
+🔗 GitHub: https://github.com/2002Souvik
