@@ -24,6 +24,23 @@ public class Booking {
         this.bookingTime = LocalDateTime.now();
         this.expiryTime = bookingTime.plusMinutes(5); // 5 minutes to complete payment
     }
+
+    // Additional constructor for loading from persistence
+    public Booking(String id, User user, Show show, List<Seat> seats,
+                   double totalAmount, BookingStatus status,
+                   LocalDateTime bookingTime, LocalDateTime expiryTime) {
+        this.id = id;
+        this.user = user;
+        this.show = show;
+        this.seats = seats;
+        this.totalAmount = totalAmount;
+        this.status = status;
+        this.bookingTime = bookingTime;
+        this.expiryTime = expiryTime;
+    }
+
+    public void setBookingTime(LocalDateTime bookingTime) { this.bookingTime = bookingTime; }
+    public void setExpiryTime(LocalDateTime expiryTime) { this.expiryTime = expiryTime; }
     
     // Getters and Setters
     public String getId() { return id; }

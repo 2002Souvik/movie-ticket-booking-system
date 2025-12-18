@@ -21,6 +21,15 @@ public class Show {
         this.endTime = startTime.plusMinutes(movie.getDuration());
         this.price = price;
     }
+
+    // Return a friendly time type (Morning/Afternoon/Evening/Night)
+    public String getTimeType() {
+        int hour = startTime.getHour();
+        if (hour >= 5 && hour < 12) return "Morning";
+        if (hour >= 12 && hour < 17) return "Afternoon";
+        if (hour >= 17 && hour < 21) return "Evening";
+        return "Night";
+    }
     
     // Getters
     public String getId() { return id; }

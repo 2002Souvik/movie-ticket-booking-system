@@ -2,6 +2,8 @@ import model.*;
 import repository.*;
 import service.*;
 import util.IdGenerator;
+import util.CsvUtil;
+import util.DateTimeUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,8 +32,8 @@ public class Main {
         // Initialize repositories
         MovieRepository movieRepository = new MovieRepository();
         ShowRepository showRepository = new ShowRepository();
-        BookingRepository bookingRepository = new BookingRepository();
         userRepository = new UserRepository();
+        BookingRepository bookingRepository = new BookingRepository(showRepository, userRepository);
         
         // Initialize services
         movieService = new MovieService(movieRepository);
@@ -46,22 +48,37 @@ public class Main {
     }
     
     private static void initializeSampleData() {
-        // Add sample movies
-        Movie movie1 = new Movie(IdGenerator.generateId("MOV"), "Avengers: Endgame", 
-                "Superheroes assemble to save the universe", 181, "Action", 
-                "English", LocalDate.of(2019, 4, 26), 8.4, "Robert Downey Jr., Chris Evans");
-        
-        Movie movie2 = new Movie(IdGenerator.generateId("MOV"), "The Dark Knight", 
-                "Batman faces the Joker", 152, "Action", "English", 
-                LocalDate.of(2008, 7, 18), 9.0, "Christian Bale, Heath Ledger");
+        // Add sample movies (Bollywood, Tollywood, Hollywood mix)
+        Movie movie1 = new Movie(IdGenerator.generateId("MOV"), "3 Idiots", 
+            "Two friends search for their lost companion and recall their college days", 170, "Comedy/Drama", 
+            "Hindi", LocalDate.of(2009, 12, 25), 8.4, "Aamir Khan, R. Madhavan");
 
-        Movie movie3 = new Movie(IdGenerator.generateId("MOV"), "Inception", 
-                "A thief who steals corporate secrets through dream-sharing", 148, "Sci-Fi", 
-                "English", LocalDate.of(2010, 7, 16), 8.8, "Leonardo DiCaprio, Joseph Gordon-Levitt");
-        
+        Movie movie2 = new Movie(IdGenerator.generateId("MOV"), "Dangal", 
+            "A former wrestler trains his daughters to become world-class wrestlers", 161, "Drama/Sports", "Hindi", 
+            LocalDate.of(2016, 12, 23), 8.6, "Aamir Khan, Sakshi Tanwar");
+
+        Movie movie3 = new Movie(IdGenerator.generateId("MOV"), "RRR", 
+            "A fictional tale about two Indian revolutionaries", 182, "Action/Drama", "Telugu", 
+            LocalDate.of(2022, 3, 25), 8.0, "N. T. Rama Rao Jr., Ram Charan");
+
+        Movie movie4 = new Movie(IdGenerator.generateId("MOV"), "Baahubali: The Beginning", 
+            "An epic tale of a lost prince and a kingdom in turmoil", 159, "Action/Fantasy", "Telugu", 
+            LocalDate.of(2015, 7, 10), 8.0, "Prabhas, Rana Daggubati");
+
+        Movie movie5 = new Movie(IdGenerator.generateId("MOV"), "Inception", 
+            "A thief who steals corporate secrets through dream-sharing", 148, "Sci-Fi", 
+            "English", LocalDate.of(2010, 7, 16), 8.8, "Leonardo DiCaprio, Joseph Gordon-Levitt");
+
+        Movie movie6 = new Movie(IdGenerator.generateId("MOV"), "Interstellar", 
+            "Explorers travel through a wormhole in space to ensure humanity's survival", 169, "Sci-Fi", "English", 
+            LocalDate.of(2014, 11, 7), 8.6, "Matthew McConaughey, Anne Hathaway");
+
         movieService.addMovie(movie1);
         movieService.addMovie(movie2);
         movieService.addMovie(movie3);
+        movieService.addMovie(movie4);
+        movieService.addMovie(movie5);
+        movieService.addMovie(movie6);
         
         // Add sample theaters
         Theater theater1 = new Theater("T1", "PVR Cinemas", "Downtown Mall");
@@ -86,9 +103,12 @@ public class Main {
         showService.createShow(IdGenerator.generateId("SHW"), movie1, theater2, screen3, 
                              LocalDateTime.now().plusHours(8), 12.50);
 
-        // Add sample user
-        User sampleUser = new User("USR_001", "John Doe", "john@email.com", "1234567890");
-        userRepository.addUser(sampleUser);
+        // Add sample user only if not already registered
+        String sampleEmail = "john@email.com";
+        if (!userRepository.userExists(sampleEmail)) {
+            User sampleUser = new User("USR_001", "John Doe", sampleEmail, "1234567890");
+            userRepository.addUser(sampleUser);
+        }
         
         System.out.println("Sample data initialized successfully!");
         System.out.println("Sample user: john@email.com");
@@ -153,6 +173,8 @@ public class Main {
         currentUser = userRepository.getUserByEmail(email);
         if (currentUser != null) {
             System.out.println("Login successful! Welcome " + currentUser.getName());
+            // log login
+            CsvUtil.appendLine("data/logins.csv", DateTimeUtil.format(LocalDateTime.now()) + "," + currentUser.getId() + "," + currentUser.getEmail() + ",LOGIN");
             showUserMenu();
         } else {
             System.out.println("User not found! Please register first.");
@@ -200,11 +222,13 @@ public class Main {
         
         for (int i = 0; i < shows.size(); i++) {
             Show show = shows.get(i);
+            String date = show.getStartTime().toLocalDate().toString();
+            String time = DateTimeUtil.formatTime(show.getStartTime());
+            String type = show.getTimeType();
             System.out.println((i + 1) + ". " + show.getTheater().getName() + 
                              " | " + show.getScreen().getName() +
-                             " | " + show.getStartTime().toLocalDate() + " " + 
-                             show.getStartTime().toLocalTime() +
-                             " | " + show.getPrice() + "INR");
+                             " | " + date + " " + time + " (" + type + ")"
+                             + " | Rs: " + show.getPrice());
         }
         
         System.out.print("Enter show number to book (0 to go back): ");
@@ -220,7 +244,7 @@ public class Main {
         System.out.println("Theater: " + show.getTheater().getName() + " - " + show.getTheater().getLocation());
         System.out.println("Screen: " + show.getScreen().getName());
         System.out.println("Time: " + show.getStartTime());
-        System.out.println("Price per ticket: $" + show.getPrice());
+        System.out.println("Price per ticket: Rs: " + show.getPrice());
         
         // Display seat layout
         displaySeatLayout(show);
@@ -234,7 +258,7 @@ public class Main {
             System.out.println("\nSeats locked successfully!");
             System.out.println("Booking ID: " + booking.getId());
             System.out.println("Selected Seats: " + String.join(", ", seatNumbers));
-            System.out.println("Total amount: $" + booking.getTotalAmount());
+            System.out.println("Total amount: Rs: " + booking.getTotalAmount());
             System.out.println("You have 5 minutes to complete payment.");
             
             System.out.print("Proceed to payment? (yes/no): ");
@@ -324,11 +348,41 @@ public class Main {
                 System.out.println("│ Seats: " + booking.getSeats().stream()
                         .map(Seat::getSeatNumber)
                         .reduce((a, b) -> a + ", " + b).orElse(""));
-                System.out.println("│ Amount: " + booking.getTotalAmount() + " INR");
+                System.out.println("│ Amount: Rs: " + booking.getTotalAmount());
                 System.out.println("│ Status: " + booking.getStatus());
-                System.out.println("│ Time: " + booking.getBookingTime());
+                System.out.println("│ Time: " + DateTimeUtil.format(booking.getBookingTime()));
                 System.out.println("└─────────────────────────────────────");
             }
+        }
+    }
+
+    private static void cancelBookingMenu() {
+        List<Booking> bookings = bookingService.getUserBookings(currentUser.getId());
+        if (bookings.isEmpty()) {
+            System.out.println("No bookings to cancel.");
+            return;
+        }
+
+        System.out.println("\nYour bookings:");
+        for (int i = 0; i < bookings.size(); i++) {
+            Booking b = bookings.get(i);
+            System.out.printf("%d. %s | %s | Seats: %s | Status: %s\n", i+1, b.getId(), b.getShow().getMovie().getTitle(),
+                    b.getSeats().stream().map(Seat::getSeatNumber).reduce((a,b2)->a+", "+b2).orElse(""), b.getStatus());
+        }
+
+        System.out.print("Enter booking number to cancel (0 to go back): ");
+        int choice = getIntInput();
+        if (choice <= 0 || choice > bookings.size()) {
+            System.out.println("Cancelled.");
+            return;
+        }
+
+        Booking toCancel = bookings.get(choice - 1);
+        try {
+            bookingService.cancelBooking(toCancel.getId());
+            System.out.println("Booking " + toCancel.getId() + " cancelled successfully.");
+        } catch (Exception e) {
+            System.out.println("Failed to cancel booking: " + e.getMessage());
         }
     }
     
@@ -337,7 +391,8 @@ public class Main {
             System.out.println("\n=== Welcome, " + currentUser.getName() + " ===");
             System.out.println("1. Browse Movies & Book Tickets");
             System.out.println("2. View Booking History");
-            System.out.println("3. Logout");
+            System.out.println("3. Cancel Booking");
+            System.out.println("4. Logout");
             System.out.print("Choose option: ");
             
             int choice = getIntInput();
@@ -350,6 +405,11 @@ public class Main {
                     viewBookingHistory();
                     break;
                 case 3:
+                    cancelBookingMenu();
+                    break;
+                case 4:
+                    // log logout
+                    CsvUtil.appendLine("data/logins.csv", DateTimeUtil.format(LocalDateTime.now()) + "," + currentUser.getId() + "," + currentUser.getEmail() + ",LOGOUT");
                     currentUser = null;
                     System.out.println("Logged out successfully!");
                     return;

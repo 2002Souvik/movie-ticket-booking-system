@@ -1,2 +1,0 @@
-USR_001,John Doe,john@email.com,1234567890
-USR_002,Jane Smith,jane@email.com,0987654321
