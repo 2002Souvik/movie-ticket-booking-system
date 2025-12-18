@@ -110,8 +110,13 @@ public class Main {
             userRepository.addUser(sampleUser);
         }
         
-        System.out.println("Sample data initialized successfully!");
-        System.out.println("Sample user: john@email.com");
+        System.out.println("********************************************");
+        System.out.println(" IMAX - Movie Ticket Booking System");
+        System.out.println("********************************************");
+        System.out.println(" Chitkara University | Batch 2022\u20132026");
+        System.out.println(" Date : 18 Dec 2025");
+        System.out.println(" By   : Souvik Dhar");
+        System.out.println("********************************************");
     }
     
     private static void showMainMenu() {
