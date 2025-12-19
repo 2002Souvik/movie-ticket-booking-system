@@ -7,3 +7,9 @@ timestamp,userId,userEmail,action
 2025-12-18 16:32:00,USR_31935638,souvik@gmail.com,LOGOUT
 2025-12-18 16:34:04,USR_1084F9A7,rahul@email.com,LOGIN
 2025-12-18 16:36:28,USR_1084F9A7,rahul@email.com,LOGOUT
+2025-12-19 01:21:45,USR_31935638,souvik@gmail.com,LOGIN
+2025-12-19 01:29:52,USR_31935638,souvik@gmail.com,LOGOUT
+2025-12-19 08:52:42,USR_31935638,souvik@gmail.com,LOGIN
+2025-12-19 08:54:27,USR_31935638,souvik@gmail.com,LOGOUT
+2025-12-19 09:08:12,USR_2C9965D6,raghav@gmail.com,LOGIN
+2025-12-19 09:12:25,USR_2C9965D6,raghav@gmail.com,LOGOUT

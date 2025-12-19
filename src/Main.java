@@ -80,6 +80,47 @@ public class Main {
         movieService.addMovie(movie5);
         movieService.addMovie(movie6);
         
+        // Additional 90s / 2000s Bollywood movies
+        Movie movie7 = new Movie(IdGenerator.generateId("MOV"), "Dilwale Dulhania Le Jayenge", 
+            "A young couple fall in love during a European vacation, but must win over family to be together.", 189, "Romance/Drama", 
+            "Hindi", LocalDate.of(1995, 10, 20), 8.1, "Shah Rukh Khan, Kajol");
+
+        Movie movie8 = new Movie(IdGenerator.generateId("MOV"), "Hum Aapke Hain Koun..!", 
+            "A celebration of family, love and marriage centered around two families and their bond.", 206, "Family/Romance", 
+            "Hindi", LocalDate.of(1994, 8, 5), 7.5, "Salman Khan, Madhuri Dixit");
+
+        Movie movie9 = new Movie(IdGenerator.generateId("MOV"), "Kuch Kuch Hota Hai", 
+            "College romance, friendship and second chances when an old letter changes lives.", 185, "Romance/Drama", 
+            "Hindi", LocalDate.of(1998, 10, 16), 7.6, "Shah Rukh Khan, Kajol, Rani Mukerji");
+
+        Movie movie10 = new Movie(IdGenerator.generateId("MOV"), "Mohabbatein", 
+            "An authoritarian headmaster's strict rules are challenged by a new music teacher and his views on love.", 216, "Romance/Drama", 
+            "Hindi", LocalDate.of(2000, 10, 27), 6.2, "Amitabh Bachchan, Shah Rukh Khan");
+
+        Movie movie11 = new Movie(IdGenerator.generateId("MOV"), "Hera Pheri", 
+            "Three unemployed men get into hilarious trouble while trying to make quick money.", 144, "Comedy", 
+            "Hindi", LocalDate.of(2000, 6, 30), 8.2, "Akshay Kumar, Paresh Rawal, Suniel Shetty");
+
+        Movie movie12 = new Movie(IdGenerator.generateId("MOV"), "Lagaan: Once Upon a Time in India", 
+            "Villagers take on British officers in a high-stakes cricket match to avoid taxes.", 224, "Drama/Sports", 
+            "Hindi", LocalDate.of(2001, 6, 15), 8.1, "Aamir Khan, Gracy Singh");
+
+        Movie movie13 = new Movie(IdGenerator.generateId("MOV"), "Kabhi Khushi Kabhie Gham", 
+            "A wealthy family deals with love, pride and the consequences of decisions across generations.", 210, "Drama/Family", 
+            "Hindi", LocalDate.of(2001, 12, 14), 7.4, "Amitabh Bachchan, Shah Rukh Khan, Kajol");
+
+        Movie movie14 = new Movie(IdGenerator.generateId("MOV"), "Dil Chahta Hai", 
+            "Three friends' lives change as they grow up and face love, friendship and differences.", 170, "Comedy/Drama", 
+            "Hindi", LocalDate.of(2001, 8, 10), 8.1, "Aamir Khan, Saif Ali Khan, Akshaye Khanna");
+
+        movieService.addMovie(movie7);
+        movieService.addMovie(movie8);
+        movieService.addMovie(movie9);
+        movieService.addMovie(movie10);
+        movieService.addMovie(movie11);
+        movieService.addMovie(movie12);
+        movieService.addMovie(movie13);
+        movieService.addMovie(movie14);
         // Add sample theaters
         Theater theater1 = new Theater("T1", "PVR Cinemas", "Downtown Mall");
         Theater theater2 = new Theater("T2", "INOX", "City Center");
@@ -94,14 +135,15 @@ public class Main {
         theater2.addScreen(screen3);
         
         // Add sample shows
+        // Realistic ticket prices for screens (INR)
         showService.createShow(IdGenerator.generateId("SHW"), movie1, theater1, screen1, 
-                             LocalDateTime.now().plusHours(2), 12.50);
+                     LocalDateTime.now().plusHours(2), 250.00);
         showService.createShow(IdGenerator.generateId("SHW"), movie2, theater1, screen2, 
-                             LocalDateTime.now().plusHours(4), 10.00);
+                     LocalDateTime.now().plusHours(4), 220.00);
         showService.createShow(IdGenerator.generateId("SHW"), movie3, theater2, screen3, 
-                             LocalDateTime.now().plusHours(6), 15.00);
+                     LocalDateTime.now().plusHours(6), 450.00);
         showService.createShow(IdGenerator.generateId("SHW"), movie1, theater2, screen3, 
-                             LocalDateTime.now().plusHours(8), 12.50);
+                     LocalDateTime.now().plusHours(8), 350.00);
 
         // Add sample user only if not already registered
         String sampleEmail = "john@email.com";
@@ -113,7 +155,7 @@ public class Main {
         System.out.println("********************************************");
         System.out.println(" IMAX - Movie Ticket Booking System");
         System.out.println("********************************************");
-        System.out.println(" Chitkara University | Batch 2022\u20132026");
+        System.out.println(" Chitkara University | Batch (2022-2026)");
         System.out.println(" Date : 18 Dec 2025");
         System.out.println(" By   : Souvik Dhar");
         System.out.println("********************************************");
@@ -287,6 +329,37 @@ public class Main {
                     if (success) {
                         System.out.println(" Payment successful! Booking confirmed!");
                         System.out.println(" Tickets booked successfully! Enjoy your movie!");
+
+                        // Print a decorated ticket invoice/slip
+                        double subtotal = booking.getTotalAmount();
+                        double gst = subtotal * 0.18; // 18% GST
+                        double totalPayable = subtotal + gst;
+
+                        System.out.println();
+                        System.out.println("**********************************************");
+                        System.out.println("*               TICKET INVOICE               *");
+                        System.out.println("**********************************************");
+                        System.out.println("Movie   : " + booking.getShow().getMovie().getTitle());
+                        System.out.println("Theater : " + booking.getShow().getTheater().getName() + " - " + booking.getShow().getTheater().getLocation());
+                        System.out.println("Screen  : " + booking.getShow().getScreen().getName());
+                        System.out.println("Show    : " + DateTimeUtil.format(booking.getShow().getStartTime()));
+                        System.out.println("Seats   : " + booking.getSeats().stream().map(Seat::getSeatNumber).reduce((a, b) -> a + ", " + b).orElse(""));
+                        System.out.println("----------------------------------------------");
+                        System.out.println("Ticket Numbers:");
+                        for (Seat seat : booking.getSeats()) {
+                            // include seat number with generated ticket id to use the variable and be informative
+                            System.out.println("  " + seat.getSeatNumber() + " - " + IdGenerator.generateId("TKT"));
+                        }
+                        System.out.println("----------------------------------------------");
+                        System.out.println(String.format("Rate per ticket : Rs. %.2f", booking.getShow().getPrice()));
+                        System.out.println(String.format("No. of Tickets   : %02d", booking.getSeats().size()));
+                        System.out.println(String.format("Subtotal         : Rs. %.2f", subtotal));
+                        System.out.println(String.format("GST (18%%)        : Rs. %.2f", gst));
+                        System.out.println("==============================================");
+                        System.out.println(String.format("TOTAL PAYABLE    : Rs. %.2f", totalPayable));
+                        System.out.println("==============================================");
+                        System.out.println(" Enjoy the show! Please carry a valid ID.");
+                        System.out.println();
                     } else {
                         System.out.println(" Payment failed! Booking cancelled.");
                     }
@@ -320,9 +393,9 @@ public class Main {
                 if (index < seats.size()) {
                     Seat seat = seats.get(index);
                     String statusSymbol = switch (seat.getStatus()) {
-                        case AVAILABLE -> "🟢";
-                        case BOOKED -> "🔴";
-                        case LOCKED -> "🟡";
+                        case AVAILABLE -> "O"; // Available
+                        case BOOKED -> "X";    // Booked
+                        case LOCKED -> "L";    // Locked
                     };
                     System.out.print(statusSymbol + " ");
                 }
@@ -346,17 +419,17 @@ public class Main {
             System.out.println("No bookings found!");
         } else {
             for (Booking booking : bookings) {
-                System.out.println("┌─────────────────────────────────────");
-                System.out.println("│ Booking ID: " + booking.getId());
-                System.out.println("│ Movie: " + booking.getShow().getMovie().getTitle());
-                System.out.println("│ Theater: " + booking.getShow().getTheater().getName());
-                System.out.println("│ Seats: " + booking.getSeats().stream()
-                        .map(Seat::getSeatNumber)
-                        .reduce((a, b) -> a + ", " + b).orElse(""));
-                System.out.println("│ Amount: Rs: " + booking.getTotalAmount());
-                System.out.println("│ Status: " + booking.getStatus());
-                System.out.println("│ Time: " + DateTimeUtil.format(booking.getBookingTime()));
-                System.out.println("└─────────────────────────────────────");
+                System.out.println("--------------------------------------------------");
+                System.out.println("Booking ID: " + booking.getId());
+                System.out.println("Movie     : " + booking.getShow().getMovie().getTitle());
+                System.out.println("Theater   : " + booking.getShow().getTheater().getName());
+                System.out.println("Seats     : " + booking.getSeats().stream()
+                    .map(Seat::getSeatNumber)
+                    .reduce((a, b) -> a + ", " + b).orElse(""));
+                System.out.println("Amount    : Rs: " + booking.getTotalAmount());
+                System.out.println("Status    : " + booking.getStatus());
+                System.out.println("Time      : " + DateTimeUtil.format(booking.getBookingTime()));
+                System.out.println("--------------------------------------------------");
             }
         }
     }
